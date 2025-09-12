@@ -1,6 +1,3 @@
-/**
- *Submitted for verification at BscScan.com on 2025-07-31
-*/
 
 // SPDX-License-Identifier: UNLICENSED
 
@@ -220,30 +217,7 @@ contract PROFXEXPO is  Ownable, Pausable, Initializable, ReentrancyGuard {
     address public USDT;
     address public UnitySign;
 
-    uint256 public levelRoiPerDay;
-    uint256 public roiPerDay;
-    uint256 public multipler;
-    uint256 public minWithdraw;
-    uint256 public joiningFee;
-    uint256 public minStake;
-    uint256 public maxStake;
-
-    uint256 public airdropUserCount;
-    uint256 public airdropAmount;
-    uint256 public airdropPerMonth;
-
-    bool public isAirdropPaused;
-    uint256 public TIME_STEP;
     uint256 public lastUserId;
-    uint256 public PERCENT_DIVIDER;
-    uint256 public LASTLEVEL;
-    uint256 public totalStaked;
-    uint256 public totalWithdrawal;
-    uint256[] public levelBonusShares;
-    uint256[] public airdropLevelShares;
-    address[] public adminAchivers;
-    mapping(uint=>uint) public levelShare;
-    mapping(address => bool) public isAdminAchived;
     mapping(address => User) public users;
     mapping(uint256 => address) public idToAddress;
     mapping(address => uint) public nonce;
@@ -255,13 +229,10 @@ contract PROFXEXPO is  Ownable, Pausable, Initializable, ReentrancyGuard {
         address indexed user,
         address indexed referrer,
         uint256 userId,
-        uint256 referrerId,
-        string regby
+        uint256 referrerId
     );
    
-    
-    event ToppedUp(address indexed user, uint amount, uint token, string plan);
-    event Stake(address indexed user, uint amount, uint token, string plan, string tyyp, uint plantype);
+    event Stake(address indexed user, uint amount, uint plan);
     event MemberPayment(address indexed  investor,uint netAmt);
     event Withdraw(address indexed user, uint amount, uint nonce);
 
@@ -287,33 +258,14 @@ contract PROFXEXPO is  Ownable, Pausable, Initializable, ReentrancyGuard {
             packageMinAmounts[packages[i].packageId] = packages[i].minAmount;
         }
 
-
-        minStake = 60 * 1e18;
-        maxStake = 10000 * 1e18;
-      
-        joiningFee = 30 * 1e18;
-        multipler = 2;
-
-        LASTLEVEL = 10;
-        TIME_STEP = 1 days;
-
-        PERCENT_DIVIDER = 1000;
-
-        levelShare[1] = 3000;
-        levelShare[2] = 1500;
-        levelShare[3] = 750;
-        levelShare[4] = 500;
-        levelShare[5] = 400;
-
-        isAirdropPaused = false;
         lastUserId = 1;
         users[_owner].userId = lastUserId;
         idToAddress[lastUserId] = _owner;
         lastUserId++;
-        emit Registration(_owner, address(0), 1, 0,"Owner");
+        emit Registration(_owner, address(0), 1, 0);
     } 
 
-     function registration(address userAddress, address referrerAddress, string memory tyyp) private {
+     function registration(address userAddress, address referrerAddress) private {
         require(!isUserExists(userAddress), "User Exists!");
         require(isUserExists(referrerAddress), "Referrer not Exists!");
         users[userAddress].userId = lastUserId; 
@@ -322,31 +274,23 @@ contract PROFXEXPO is  Ownable, Pausable, Initializable, ReentrancyGuard {
         users[userAddress].partnersCount = 0;
         lastUserId++;
         users[referrerAddress].partnersCount++;
-        emit Registration(userAddress, referrerAddress, users[userAddress].userId,users[referrerAddress].userId,tyyp);
+        emit Registration(userAddress, referrerAddress, users[userAddress].userId,users[referrerAddress].userId);
     } 
 
 
-        function stakestDSC(uint amount, uint plan, address _referral) public {
+        function stake(uint amount, uint plan, address _referral) public {
          if(!isUserExists(_msgSender())){
-        registration(_msgSender(),_referral,"stDSC");
+        registration(_msgSender(),_referral);
         }
         require(isUserExists(_msgSender()), "Dsclab: User not Exists!");
-        require(amount >= minStake, "Minimum Activation is $60");
-        require(amount <= maxStake, "Maximum Activation is $10000");
-        require(plan == 1, "In Fix plan only USDT investment is allowed");
+        require(plan == 1 && amount >= packages[plan].minAmount, "Invalid Investment Amount for this Plan");
         uint lastinvst = users[_msgSender()].lastinvest;
-        if(lastinvst > 0){
-        require(amount >= lastinvst, "Re Investment Should Equal/Greater than last Investment");    
-        }
+        // if(lastinvst > 0){
+        // require(amount >= lastinvst, "Re Investment Should Equal/Greater than last Investment");    
+        // }
 
-        uint price = 11200000000000000;
-
-        uint256 DSCCMQty=(amount*1e18)/price; 
-      
         address ref = users[_msgSender()].referrer;
-        uint usrstake = users[_msgSender()].totalStake;
-        string memory stakeType = (usrstake == 0) ? "New" : "Retopup";
-        emit Stake(msg.sender, amount, DSCCMQty, "stDSC", stakeType, plan);
+        emit Stake(msg.sender, amount, plan);
         users[_msgSender()].lastinvest = amount;
         users[_msgSender()].totalStake += amount;
         uint refStake = users[_msgSender()].totalStake;
@@ -356,46 +300,10 @@ contract PROFXEXPO is  Ownable, Pausable, Initializable, ReentrancyGuard {
         
     }
 
-    function sendLevelIncome(address user, uint256 amount) internal {
-        address referral = users[user].referrer;
-
-        for (uint i = 1; i <= 25; i++) {
-            if (referral != address(0)) {
-                User storage refUser = users[referral];
-                if (!refUser.onof) {
-                    uint levelIncome = 0;
-
-                    if (refUser.partnersCount >= i && i <= 3) {
-                        levelIncome = (amount * levelShare[i]) / PERCENT_DIVIDER;
-                    } else if (refUser.partnersCount > 7 && i > 5 && i <= 10) {
-                        levelIncome = (amount * 300) / PERCENT_DIVIDER;
-                    } else if (refUser.partnersCount > 11 && i > 10 && i <= 15) {
-                        levelIncome = (amount * 250) / PERCENT_DIVIDER;
-                    } else if (refUser.partnersCount > 14 && i > 15 && i <= 20) {
-                        levelIncome = (amount * 200) / PERCENT_DIVIDER;
-                    } else if (refUser.partnersCount > 17 && i > 20 && i <= 25) {
-                        levelIncome = (amount * 100) / PERCENT_DIVIDER;
-                    }
-
-                    uint rewcum = refUser.rewTaken + levelIncome;
-                    
-                        IERC20(USDT).transfer(referral, levelIncome);
-                        refUser.levelIncome += levelIncome;
-                        refUser.rewTaken += levelIncome;
-                       // emit LevelIncome(referral, user, i, levelIncome);
-                   
-                }
-                referral = refUser.referrer;
-            }
-        }
-    }
-
 
     function isUserExists(address user) public view returns (bool) {
         return (users[user].userId != 0);
     }
-
-
 
     function pause() external onlyOperator {
       _pause();
@@ -426,7 +334,7 @@ contract PROFXEXPO is  Ownable, Pausable, Initializable, ReentrancyGuard {
         }
     }
 
-        function getWithdrawHash(
+    function getWithdrawHash(
         address user,
         uint256 weeklyReward,
         uint256 deadline
@@ -460,7 +368,7 @@ contract PROFXEXPO is  Ownable, Pausable, Initializable, ReentrancyGuard {
         return signer == UnitySign;
     }
 
-    function withdrawWeeklyReward(
+    function withdrawRoi(
         uint256 amount,
         uint8 v,
         bytes32 r,

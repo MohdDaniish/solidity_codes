@@ -18,7 +18,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"profxexpo.sol": "Initializable"
+			"arcanix.sol": "Initializable"
 		},
 		"evmVersion": "prague",
 		"libraries": {},
@@ -32,12 +32,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"profxexpo.sol": {
-			"keccak256": "0xdf348c2552dcf89d9de593ac6a4bafb975a8ca2de91104f91311aae8f53a1094",
-			"license": "UNLICENSED",
+		"arcanix.sol": {
+			"keccak256": "0x54c021e0907f207aa74592278dbd8b3ccfcc4670596db577a41e36a0a34e3f24",
+			"license": "MIT",
 			"urls": [
-				"bzz-raw://35ce73bc036d4e94456ecb850c8371b2b1aa5962f2018e80da4518c006900278",
-				"dweb:/ipfs/QmX9QccYbUHec9oJDsemZa7RoeyYJt4q5JRW3iqfK7oFj5"
+				"bzz-raw://7c166184038e279310b094be8221951f9a56d7059b706cedcccae2f0e2b99384",
+				"dweb:/ipfs/QmcSdWYRNxJ3vX2GjnH1TczMjCj4tNNCmBSpWhUs8o1dqT"
 			]
 		}
 	},

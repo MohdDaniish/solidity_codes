@@ -1,0 +1,37 @@
+{
+	"compiler": {
+		"version": "0.5.16+commit.9c3226ce"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"methods": {}
+		},
+		"userdoc": {
+			"methods": {}
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"arcanixtoken.sol": "SafeMath"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"arcanixtoken.sol": {
+			"keccak256": "0x6e67fdf54a03e9ff42a41d96eed61e0131db0153fac733241b817d1344126326",
+			"urls": [
+				"bzz-raw://1e2ad1d52581c1976fe8f07f29648fc3fb5e9e110661d63cfdbad4b5853938de",
+				"dweb:/ipfs/QmZEa12bCESD4nDwW7699eXgaqebfPJBhApNcNCBNsfbxy"
+			]
+		}
+	},
+	"version": 1
+}

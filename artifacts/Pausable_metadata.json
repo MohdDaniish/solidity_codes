@@ -73,11 +73,11 @@
 	},
 	"sources": {
 		"profxexpo.sol": {
-			"keccak256": "0xdf348c2552dcf89d9de593ac6a4bafb975a8ca2de91104f91311aae8f53a1094",
+			"keccak256": "0x7322c1dd8a03a512d624422ffe6b379e505f749d2d452d63d9afbc3cbd08f665",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://35ce73bc036d4e94456ecb850c8371b2b1aa5962f2018e80da4518c006900278",
-				"dweb:/ipfs/QmX9QccYbUHec9oJDsemZa7RoeyYJt4q5JRW3iqfK7oFj5"
+				"bzz-raw://240d7cced53837f13bd19aaffa8f9c459e7e189efb940d5c123b95a2f00b9bd1",
+				"dweb:/ipfs/QmfNo8CCatVYBhWY7ihCxgJsaZdkbbCYz1aKMVERAzN2jE"
 			]
 		}
 	},
